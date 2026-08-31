@@ -10,19 +10,23 @@ services:
     staticPublishPath: ./client-telecom
     pullRequestPreviewsEnabled: false
     headers:
-      # os arquivos de assets tem nome fixo e mudam junto com o deploy,
-      # entao podem ser guardados no navegador por bastante tempo
-      - path: /assets/*
-        name: Cache-Control
-        value: public, max-age=604800
-      # o html precisa ser sempre buscado de novo, ou uma republicacao
-      # nao aparece para quem ja visitou
-      - path: /*
-        name: Cache-Control
-        value: no-cache
+      # A ORDEM IMPORTA: no Render a ultima regra que casa vence.
+      # entao a regra geral vem primeiro e a especifica depois, ou o
+      # /* anularia o /assets/* e o video de 7,4 MB seria rebaixado
+      # a cada visita.
       - path: /*
         name: X-Content-Type-Options
         value: nosniff
       - path: /*
         name: Referrer-Policy
         value: strict-origin-when-cross-origin
+      # o html precisa ser sempre revalidado, ou uma republicacao
+      # nao aparece para quem ja visitou
+      - path: /*
+        name: Cache-Control
+        value: no-cache
+      # os assets tem nome fixo e so mudam junto com um deploy novo,
+      # entao o navegador pode guardar por uma semana
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=604800
