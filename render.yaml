@@ -1,0 +1,28 @@
+# Configuracao do deploy no Render.
+# O site e uma pasta de arquivos estaticos: nao ha build, nao ha backend.
+# Com este arquivo no repositorio, o Render se configura sozinho.
+
+services:
+  - name: client-telecom
+    type: web
+    runtime: static
+    buildCommand: ""
+    staticPublishPath: ./client-telecom
+    pullRequestPreviewsEnabled: false
+    headers:
+      # os arquivos de assets tem nome fixo e mudam junto com o deploy,
+      # entao podem ser guardados no navegador por bastante tempo
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=604800
+      # o html precisa ser sempre buscado de novo, ou uma republicacao
+      # nao aparece para quem ja visitou
+      - path: /*
+        name: Cache-Control
+        value: no-cache
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
