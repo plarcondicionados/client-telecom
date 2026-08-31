@@ -1,0 +1,12 @@
+# materiais de trabalho: nada disto precisa ir para o repositorio nem para o ar
+review/
+PARA-VOCE/
+_skill_extract/
+*.zip
+hostgator.env
+publicar.ps1
+publicar.sh
+
+# arquivos brutos pesados da geracao
+marca/imagens/
+imageminicial.png
