@@ -414,15 +414,35 @@ footer{border-top:1px solid var(--line);padding-block:clamp(48px,7vw,80px);posit
 .foot-bottom{margin-top:52px;padding-top:26px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;font-size:.82rem;color:var(--text-secondary)}
 
 /* ---------- o celular roda o scrub com o vídeo vertical leve ---------- */
+/* ---------- o hero no celular ----------
+   A marca é larga e a tela do celular é estreita e alta, então NENHUM corte
+   vertical cabe o anel inteiro: ele sempre sai por um dos lados.
+   A solução é geométrica, não de ajuste fino: o vídeo vira um bloco quadrado
+   no topo, com a marca inteira dentro, e o texto desce para baixo dele. */
 @media (max-width:900px){
   .hero{height:340vh}
+  .stage{overflow:hidden}
+  .poster,#hero{
+    top:0;left:0;right:0;bottom:auto;
+    width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;
+  }
+  .poster{background-size:cover;background-position:center}
+  /* funde a base do vídeo na cor da página, para não sobrar borda dura */
+  .scrim{
+    top:0;bottom:auto;aspect-ratio:1/1;
+    background:linear-gradient(180deg,rgba(3,6,15,.34) 0%,rgba(3,6,15,0) 26%,rgba(3,6,15,.12) 58%,rgba(6,11,24,.86) 88%,var(--canvas) 100%);
+  }
   .band-copy{max-width:none}
-  .band{align-items:flex-end;padding-bottom:12svh}
-  .band h1,.band h2{font-size:clamp(2.2rem,10.5vw,3.4rem);max-width:12ch}
-  .band p{font-size:1.02rem;max-width:28ch;margin-top:14px}
+  /* o padding-top empurra a caixa do flex para baixo do vídeo quadrado,
+     e o align-items centra o texto no espaço que sobra, sem deixar buraco */
+  .band{align-items:center;padding-top:100vw;padding-bottom:4svh}
+  .band h1,.band h2{font-size:clamp(2.1rem,9.6vw,3.2rem);max-width:13ch}
+  .band p{font-size:1.02rem;max-width:30ch;margin-top:14px}
   .band .btn{margin-top:24px}
-  .band::before{background:linear-gradient(180deg,rgba(3,6,15,0) 22%,rgba(3,6,15,.62) 52%,rgba(3,6,15,.88) 100%)}
-  .ring{bottom:auto;top:50%}
+  /* o texto agora senta sobre a página, não sobre a filmagem,
+     então o scrim da faixa fica leve */
+  .band::before{background:linear-gradient(180deg,rgba(3,6,15,0) 40%,rgba(3,6,15,.45) 100%)}
+  .ring{bottom:auto;top:calc(50vw - 20px)}
 }
 
 /* ---------- os portões do hero estático ----------
@@ -786,7 +806,7 @@ const bands=bandEls.map(el=>({
 /* duas versões da MESMA tomada: a larga para telas largas, e uma vertical de
    1,1 MB para o celular, enquadrada em retrato em vez de cortada na marra */
 const FONTE_LARGA={url:'assets/hero-scrub.mp4', bytes:7405748, poster:'assets/hero-poster.jpg'};
-const FONTE_ALTA ={url:'assets/hero-mobile.mp4',bytes:1139241, poster:'assets/hero-mobile.jpg'};
+const FONTE_ALTA ={url:'assets/hero-mobile.mp4',bytes:1640531, poster:'assets/hero-mobile.jpg'};
 const ehTelaAlta=()=>matchMedia('(max-width: 900px)').matches;
 let FONTE=ehTelaAlta()?FONTE_ALTA:FONTE_LARGA;
 const VIDEO_URL=FONTE.url;
